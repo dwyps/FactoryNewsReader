@@ -19,7 +19,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "NEWS_API_ACCESS_KEY", "\"04a6b9ce8c254324b63854b3a674945d\"")
+        buildConfigField("String", "NEWS_API_ACCESS_KEY", "\"PUT_IN_YOUR_API\"")
     }
 
     buildTypes {

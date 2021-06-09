@@ -3,7 +3,6 @@ package com.frangrgec.factorynewsreader.shared.viewpager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.frangrgec.factorynewsreader.data.NewsArticle
 import com.frangrgec.factorynewsreader.databinding.DetailedNewsViewBinding
 import com.frangrgec.factorynewsreader.shared.recyclerview.NewsArticleComparator
