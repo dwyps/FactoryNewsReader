@@ -1,8 +1,6 @@
 package com.frangrgec.factorynewsreader.ui.news
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingSource
+import androidx.lifecycle.*
 import com.frangrgec.factorynewsreader.data.NewsRepository
 import com.frangrgec.factorynewsreader.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +10,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,10 +35,7 @@ class NewsViewModel @Inject constructor(
                 viewModelScope.launch { eventChannel.send(Event.ShowErrorMessage(t)) }
             }
         )
-    }.stateIn(viewModelScope, SharingStarted.Lazily, null)
-
-    init {
-    }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, null).asLiveData()
 
     fun onStart() {
 

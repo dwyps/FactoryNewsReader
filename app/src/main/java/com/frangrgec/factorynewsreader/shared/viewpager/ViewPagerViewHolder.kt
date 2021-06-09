@@ -1,6 +1,5 @@
 package com.frangrgec.factorynewsreader.shared.viewpager
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.frangrgec.factorynewsreader.R

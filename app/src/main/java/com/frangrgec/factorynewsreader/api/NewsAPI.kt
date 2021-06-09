@@ -12,7 +12,7 @@ interface NewsAPI {
         const val API_KEY = NEWS_API_ACCESS_KEY
     }
 
-    //Could have used query but not need since only one parameter
+    //Could have used query but not needed, since only one static parameter
     @Headers("X-Api-Key: $API_KEY")
     @GET("articles?source=bbc-news&sortBy=top")
     suspend fun searchBBCNews(): NewsResponse
