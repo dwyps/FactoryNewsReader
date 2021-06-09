@@ -1,14 +1,14 @@
-package com.frangrgec.factorynewsreader.shared
+package com.frangrgec.factorynewsreader.shared.viewpager
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.frangrgec.factorynewsreader.R
 import com.frangrgec.factorynewsreader.data.NewsArticle
-import com.frangrgec.factorynewsreader.databinding.ItemNewsArticleBinding
+import com.frangrgec.factorynewsreader.databinding.DetailedNewsViewBinding
 
-class NewsArticleViewHolder(
-    private val binding: ItemNewsArticleBinding,
-    private val onItemClick: (Int) -> Unit
+class ViewPagerViewHolder(
+    private val binding: DetailedNewsViewBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(article: NewsArticle) {
@@ -23,16 +23,4 @@ class NewsArticleViewHolder(
             textViewDescription.text = article.description ?: ""
         }
     }
-
-    init {
-        binding.apply {
-            root.setOnClickListener {
-                val position = bindingAdapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    onItemClick(position)
-                }
-            }
-        }
-    }
-
 }

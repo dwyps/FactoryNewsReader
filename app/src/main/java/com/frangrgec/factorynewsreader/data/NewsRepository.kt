@@ -58,6 +58,7 @@ class NewsRepository @Inject constructor(
                     article.updateAt
                 }
 
+                //Not quite sure should I update after refreshing the data
                 val oldestTimestamp = sortedArticles.firstOrNull()?.updateAt
                 val needsRefresh = oldestTimestamp == null ||
                         oldestTimestamp < System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(5)

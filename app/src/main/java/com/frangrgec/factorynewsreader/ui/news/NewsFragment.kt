@@ -1,19 +1,23 @@
 package com.frangrgec.factorynewsreader.ui.news
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.frangrgec.factorynewsreader.MainActivity
 import com.frangrgec.factorynewsreader.R
 import com.frangrgec.factorynewsreader.databinding.NewsFragmentBinding
-import com.frangrgec.factorynewsreader.shared.NewsArticleListAdapter
-import com.frangrgec.factorynewsreader.util.Resource
-import com.frangrgec.factorynewsreader.util.exhaustive
-import com.frangrgec.factorynewsreader.util.showSnackbar
+import com.frangrgec.factorynewsreader.shared.recyclerview.NewsArticleListAdapter
+import com.frangrgec.factorynewsreader.util.*
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.util.concurrent.TimeUnit
@@ -31,9 +35,17 @@ class NewsFragment : Fragment(R.layout.news_fragment) {
 
         currentBinding = NewsFragmentBinding.bind(view)
 
+        (requireActivity() as MainActivity).supportActionBar?.let {
+            it.title = getString(R.string.title_news)
+            it.setDisplayHomeAsUpEnabled(false)
+        }
+
         val newsArticleAdapter = NewsArticleListAdapter(
-            onItemClick = { article ->
-                //TODO ViewPager Open Article
+            onItemClick = { article, position->
+
+                findNavController().navigate(NewsFragmentDirections.viewArticle(position))
+                val bundle = Gson().toJson(article)
+                setFragmentResult(REQUEST_KEY, bundleOf(REQUEST_DATA to bundle))
             }
         )
 
