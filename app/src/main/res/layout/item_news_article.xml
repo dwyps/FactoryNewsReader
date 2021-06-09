@@ -30,6 +30,7 @@
             android:maxLines="1"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:fontFamily="@font/roboto_normal"
             tools:text="Headline" />
 
         <TextView
@@ -43,6 +44,7 @@
             android:maxLines="2"
             android:textColor="@color/black"
             android:textSize="12sp"
+            android:fontFamily="@font/roboto_normal"
             tools:text="Description" />
 
     </LinearLayout>

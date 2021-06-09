@@ -3,17 +3,20 @@ package com.frangrgec.factorynewsreader.ui.news
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.frangrgec.factorynewsreader.R
 import com.frangrgec.factorynewsreader.databinding.NewsFragmentBinding
-import com.frangrgec.factorynewsreader.shared.NewsArticleListAdapter
 import com.frangrgec.factorynewsreader.util.Resource
 import com.frangrgec.factorynewsreader.util.exhaustive
-import com.frangrgec.factorynewsreader.util.showSnackbar
+import com.frangrgec.factorynewsreader.MainActivity
+import com.frangrgec.factorynewsreader.shared.recyclerview.NewsArticleListAdapter
+import com.frangrgec.factorynewsreader.util.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import java.util.concurrent.TimeUnit
@@ -31,9 +34,11 @@ class NewsFragment : Fragment(R.layout.news_fragment) {
 
         currentBinding = NewsFragmentBinding.bind(view)
 
+        setActionBar(getString(R.string.title_news))
+
         val newsArticleAdapter = NewsArticleListAdapter(
-            onItemClick = { article ->
-                //TODO ViewPager Open Article
+            onItemClick = { _, position->
+                findNavController().navigate(NewsFragmentDirections.viewArticle(position))
             }
         )
 
@@ -49,29 +54,26 @@ class NewsFragment : Fragment(R.layout.news_fragment) {
             }
 
             viewLifecycleOwner.lifecycleScope.launchWhenStarted {
-                viewModel.news.collect {
 
-                    val result = it ?: return@collect
-                    val isError = result.error != null && result.data.isNullOrEmpty()
+                viewModel.news.observe(viewLifecycleOwner, Observer {
+
+                    val result = it ?:return@Observer
 
                     swipeRefreshLayout.isRefreshing = result is Resource.Loading
-                    recyclerView.isVisible = !result.data.isNullOrEmpty()
-                    textViewError.isVisible = isError
-                    buttonRetry.isVisible = isError
-                    //TODO Change to popup
-                    textViewError.text = getString(
-                        R.string.could_not_refresh,
-                        result.error?.localizedMessage
-                            ?: getString(R.string.unknown_error_occurred)
-                    )
 
+                    if (result.error != null && result.data.isNullOrEmpty()) {
+                        displayErrorDialog(
+                            result.error.localizedMessage ?: getString(R.string.unknown_error_occurred)
+                        )
+                    }
                     newsArticleAdapter.submitList(result.data) {
                         if (viewModel.pendingScrollToTopAfterRefresh) {
                             recyclerView.scrollToPosition(0)
                             viewModel.pendingScrollToTopAfterRefresh = false
                         }
                     }
-                }
+
+                })
             }
 
             swipeRefreshLayout.setOnRefreshListener {
@@ -88,14 +90,11 @@ class NewsFragment : Fragment(R.layout.news_fragment) {
                 viewModel.events.collect { event ->
 
                     when(event) {
-                        is NewsViewModel.Event.ShowErrorMessage ->
-                            showSnackbar(
-                                getString(
-                                R.string.could_not_refresh,
-                                event.error.localizedMessage
-                                    ?: getString(R.string.unknown_error_occurred)
-                                )
+                        is NewsViewModel.Event.ShowErrorMessage -> {
+                            displayErrorDialog(
+                                event.error.localizedMessage ?: getString(R.string.unknown_error_occurred)
                             )
+                        }
                     }.exhaustive
                 }
             }
@@ -112,4 +111,26 @@ class NewsFragment : Fragment(R.layout.news_fragment) {
         currentBinding = null
     }
 
+    private fun setActionBar(title: String?) {
+
+        (requireActivity() as MainActivity).supportActionBar?.apply {
+            this.title = title
+            setDisplayHomeAsUpEnabled(false)
+        }
+    }
+
+    private fun displayErrorDialog(message: String) {
+
+        MaterialDialog(requireContext()).show {
+            title(R.string.could_not_refresh)
+            message(text = message)
+            positiveButton(R.string.retry) { dialog ->
+                viewModel.onManualRefresh()
+                dialog.cancel()
+            }
+            negativeButton(R.string.cancel) { dialog ->
+                dialog.cancel()
+            }
+        }
+    }
 }
