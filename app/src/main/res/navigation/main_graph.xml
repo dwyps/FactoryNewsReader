@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graoh"
+    app:startDestination="@id/newsFragment">
+
+    <fragment
+        android:id="@+id/newsFragment"
+        android:name="com.frangrgec.factorynewsreader.ui.news.NewsFragment"
+        android:label="news_fragment"
+        tools:layout="@layout/news_fragment" >
+        <action
+            android:id="@+id/viewArticle"
+            app:destination="@id/detailedNewsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailedNewsFragment"
+        android:name="com.frangrgec.factorynewsreader.ui.detailednews.DetailedNewsFragment"
+        android:label="detailed_news_fragment"
+        tools:layout="@layout/detailed_news_fragment">
+        <argument
+            android:name="articleIndex"
+            app:argType="integer" />
+    </fragment>
+
+</navigation>

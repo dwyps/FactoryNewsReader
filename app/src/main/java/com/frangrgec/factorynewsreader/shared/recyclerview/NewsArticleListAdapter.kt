@@ -1,4 +1,4 @@
-package com.frangrgec.factorynewsreader.shared
+package com.frangrgec.factorynewsreader.shared.recyclerview
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,7 @@ import com.frangrgec.factorynewsreader.data.NewsArticle
 import com.frangrgec.factorynewsreader.databinding.ItemNewsArticleBinding
 
 class NewsArticleListAdapter (
-    private val onItemClick: (NewsArticle) -> Unit
+    private val onItemClick: (NewsArticle, Int) -> Unit
 ) : ListAdapter<NewsArticle, NewsArticleViewHolder>(NewsArticleComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsArticleViewHolder {
@@ -19,7 +19,7 @@ class NewsArticleListAdapter (
             onItemClick = { position ->
                 val article = getItem(position)
                 if (article != null) {
-                    onItemClick(article)
+                    onItemClick(article, position)
                 }
             })
     }
@@ -27,6 +27,7 @@ class NewsArticleListAdapter (
     override fun onBindViewHolder(holder: NewsArticleViewHolder, position: Int) {
 
         val currentItem = getItem(position)
+
         if (currentItem != null) {
             holder.bind(currentItem)
         }

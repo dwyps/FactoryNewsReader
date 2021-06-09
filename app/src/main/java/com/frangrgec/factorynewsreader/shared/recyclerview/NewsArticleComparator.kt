@@ -1,4 +1,4 @@
-package com.frangrgec.factorynewsreader.shared
+package com.frangrgec.factorynewsreader.shared.recyclerview
 
 import androidx.recyclerview.widget.DiffUtil
 import com.frangrgec.factorynewsreader.data.NewsArticle
